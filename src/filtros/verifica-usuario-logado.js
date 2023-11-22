@@ -1,4 +1,3 @@
-const segredo = require('../segredo')
 const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res, next) => {
@@ -8,7 +7,7 @@ module.exports = async (req, res, next) => {
             return res.status(404).json({ mensagem: 'Token não encontrado' })
         }
         const token = authorization.replace('Bearer', '').trim()
-        const { id } = jwt.verify(token, segredo)
+        const { id } = jwt.verify(token, process.env.JWT_SECRET)
         req.usuarioId = id
         next()
     } catch (error) {

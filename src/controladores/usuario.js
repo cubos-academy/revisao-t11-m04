@@ -1,7 +1,6 @@
 const conexao = require('../conexao')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const segredo = require('../segredo')
 
 const login = async (req, res) => {
     const { email, senha } = req.body
@@ -15,7 +14,7 @@ const login = async (req, res) => {
     if (!senhaVerificada) {
         return res.status(400).json({ mensagem: 'Email e senha não confere' })
     }
-    const token = jwt.sign({ id: usuario.id }, segredo, { expiresIn: '1d' })
+    const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET, { expiresIn: '1d' })
     return res.status(200).json({ token })
 }
 

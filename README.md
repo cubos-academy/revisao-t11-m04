@@ -1,5 +1,11 @@
 # Gira API
 
+## Configuração
+
+```
+Defina o seu arquivo .env utilizando o .env.exemplo
+```
+
 ## Documentação
 
 Esta a API Rest para servir dados para plataforma Gira.
