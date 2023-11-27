@@ -7,12 +7,15 @@ const feedControlador = require('./controladores/feed')
 
 const verificaUsuarioLogado = require('./filtros/verifica-usuario-logado')
 
-const validaLogin = require('./filtros/valida-login')
-const validaCadastro = require('./filtros/valida-cadastro')
-const validaSeguir = require('./filtros/valida-seguir')
+const loginValidacao = require('./validacoes/login-validacao')
+const usuarioValidacao = require('./validacoes/usuario-validacao')
 
-roteador.post('/login', validaLogin, usuarioControlador.login)
-roteador.post('/usuario', validaCadastro, usuarioControlador.cadastro)
+
+const validaSeguir = require('./filtros/valida-seguir')
+const validaRequisicao = require('./filtros/valida-requisicao')
+
+roteador.post('/login', validaRequisicao(loginValidacao), usuarioControlador.login)
+roteador.post('/usuario', validaRequisicao(usuarioValidacao), usuarioControlador.cadastro)
 
 roteador.use(verificaUsuarioLogado)
 roteador.get('/usuario', usuarioControlador.perfil)
