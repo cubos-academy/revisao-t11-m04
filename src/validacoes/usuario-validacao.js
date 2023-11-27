@@ -10,7 +10,7 @@ module.exports = joi.object({
         "string.empty": "O campo email não pode ser vazio.",
         "string.email": "O campo email deve ser um email válido."
     }),
-    senha: joi.string().min(5).required().messages({
+    senha: joi.string().min(5).max(10).required().messages({
         "any.required": "O campo senha é obrigatório.",
         "string.empty": "O campo senha não pode ser vazio.",
         "string.min": "O campo senha deve ter pelo menos 5 caracteres."
