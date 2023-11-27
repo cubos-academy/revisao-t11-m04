@@ -1,0 +1,14 @@
+const joi = require('joi')
+
+module.exports = joi.object({
+    email: joi.string().email().required().messages({
+        "any.required": "O campo email é obrigatório.",
+        "string.empty": "O campo email não pode ser vazio.",
+        "string.email": "O campo email deve ser um email válido."
+    }),
+    senha: joi.string().min(5).required().messages({
+        "any.required": "O campo senha é obrigatório.",
+        "string.empty": "O campo senha não pode ser vazio.",
+        "string.min": "O campo senha deve ter pelo menos 5 caracteres."
+    }),
+})
