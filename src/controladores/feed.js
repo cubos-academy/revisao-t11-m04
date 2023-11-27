@@ -3,12 +3,14 @@ const conexao = require('../conexao')
 const criarPost = async (req, res) => {
     const { conteudo } = req.body
     const { usuarioId } = req
-    const { rows, rowCount } = await conexao.query('insert into posts (conteudo, usuario_id) values ($1, $2)', [conteudo, usuarioId])
+    const { rows, rowCount } = await conexao.query(
+        'insert into posts (conteudo, usuario_id) values ($1, $2) returning *',
+        [conteudo, usuarioId]
+    )
     if (rowCount === 0) {
         return res.status(400).json({ mensagem: 'Não foi possível criar o post' })
     }
     return res.status(200).json({ mensagem: 'Post criado com sucesso', post: rows[0] })
-
 }
 
 const listarPosts = async (req, res) => {

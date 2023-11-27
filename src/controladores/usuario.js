@@ -1,7 +1,7 @@
 const knex = require('../conexao')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
+const emailSrv = require('../email')
 
 const login = async (req, res) => {
     const { email, senha } = req.body
@@ -18,16 +18,27 @@ const login = async (req, res) => {
 }
 
 const cadastro = async (req, res) => {
-    const { nome, email, senha } = req.body
-    const existeUsuario = await knex('usuarios').where({ email }).first()
-    if (existeUsuario) {
-        return res.status(400).json({ mensagem: 'Email já cadastrado' })
+    try {
+        const { nome, email, senha } = req.body
+        const existeUsuario = await knex('usuarios').where({ email }).first()
+        if (existeUsuario) {
+            return res.status(400).json({ mensagem: 'Email já cadastrado' })
+        }
+        const senhaCriptografada = await bcrypt.hash(senha, 10)
+        const novoUsuario = await knex('usuarios')
+            .insert({ nome, email, senha: senhaCriptografada })
+            .returning(['id', 'nome', 'email'])
+
+        await emailSrv.enviarUsandoTemplate({
+            ...novoUsuario[0],
+            template: 'boasVindas',
+        })
+
+        return res.status(200).json(novoUsuario)
+    } catch (error) {
+        console.error(error)
+        return res.status(400).json({ mensagem: 'Erro interno' })
     }
-    const senhaCriptografada = await bcrypt.hash(senha, 10)
-    const novoUsuario = await knex('usuarios')
-        .insert({ nome, email, senha: senhaCriptografada })
-        .returning(['id', 'nome', 'email'])
-    return res.status(200).json(novoUsuario)
 }
 
 
